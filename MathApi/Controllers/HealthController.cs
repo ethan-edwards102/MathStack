@@ -11,7 +11,7 @@ public class HealthController : ControllerBase
     {
         return Ok(new
         {
-            status = "ok0000",
+            status = "ok",
             service = "MathAPI"
         });
     }
