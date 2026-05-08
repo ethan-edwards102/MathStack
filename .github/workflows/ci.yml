@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     if: ${{ github.event_name != 'workflow_dispatch' || inputs.skip_build == false }}
+
     outputs:
       owner_lc: ${{ steps.vars.outputs.owner_lc }}
 
@@ -70,7 +71,7 @@ jobs:
     needs: publish
 
     if: ${{ always() && (needs.publish.result == 'success' || needs.publish.result == 'skipped') }}
-    needs: publish
+
     permissions:
       contents: read
       packages: read
@@ -101,9 +102,6 @@ jobs:
       - name: Start stack
         run: docker compose -f compose.ci.yml up -d
 
-      - name: Show running containers
-        run: docker ps
-
       - name: Wait for database
         run: |
           for i in {1..36}; do
@@ -114,7 +112,6 @@ jobs:
             echo "Waiting for database..."
             sleep 5
           done
-          echo "Database did not become ready"
           docker logs math-db || true
           exit 1
 
@@ -128,7 +125,6 @@ jobs:
             echo "Waiting for API..."
             sleep 5
           done
-          echo "API did not respond"
           docker logs math-api || true
           exit 1
 
